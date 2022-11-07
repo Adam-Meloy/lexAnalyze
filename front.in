@@ -1,1 +1,17 @@
 (sum + 47) / total
+
+ident123 && var234 || 6 != var1
+
+var1 $ var2
+
+var1 ^ var2
+
+result = (a == b) && (c > b);
+
+int a, c = 5, d;
+
+char string[5];
+
+char c[] = "abcd";
+
+for (int 1 = 0; i <= 10;) { if (i < 5) { print(i) } };

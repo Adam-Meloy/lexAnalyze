@@ -28,6 +28,8 @@ class CharClass:
 class Tokens:
     INT_LIT: int = 10
     IDENT: int = 11
+
+    # Task 1 Operators
     MULT_OP: int = 20
     DIV_OP: int = 21
     MOD_OP: int = 22
@@ -43,12 +45,25 @@ class Tokens:
     ASSIGN_OP: int = 32
     AND_OP: int = 33
     OR_OP: int = 34
+
+    # Task 2 Symbols
     LEFT_PAREN: int = 40
     RIGHT_PAREN: int = 41
     LEFT_BRACE: int = 42
     RIGHT_BRACE: int = 43
     SEMICOL: int = 44
     COMMA: int = 45
+
+    # Task 3 Reserved Words
+    FOR_CODE: int = 50
+    IF_CODE: int = 51
+    ELSE_CODE: int = 52
+    WHILE_CODE: int = 53
+    DO_CODE: int = 54
+    SWITCH_CODE: int = 55
+    INT_CODE: int = 56
+    FLOAT_CODE: int = 57
+    PRINT_CODE: int = 58
 
 
 # Function definitions
@@ -58,24 +73,7 @@ def lookup(ch):
     global next_token
 
     match ch:
-        case '(':
-            add_char()
-            next_token = Tokens.LEFT_PAREN
-        case ')':
-            add_char()
-            next_token = Tokens.RIGHT_PAREN
-        case '{':
-            add_char()
-            next_token = Tokens.LEFT_BRACE
-        case '}':
-            add_char()
-            next_token = Tokens.RIGHT_BRACE
-        case ';':
-            add_char()
-            next_token = Tokens.SEMICOL
-        case ',':
-            add_char()
-            next_token = Tokens.COMMA
+        # Task 1 Operations
         case '+':
             add_char()
             next_token = Tokens.ADD_OP
@@ -118,6 +116,56 @@ def lookup(ch):
         case '||':
             add_char()
             next_token = Tokens.OR_OP
+
+        # Task 2 Symbols
+        case '(':
+            add_char()
+            next_token = Tokens.LEFT_PAREN
+        case ')':
+            add_char()
+            next_token = Tokens.RIGHT_PAREN
+        case '{':
+            add_char()
+            next_token = Tokens.LEFT_BRACE
+        case '}':
+            add_char()
+            next_token = Tokens.RIGHT_BRACE
+        case ';':
+            add_char()
+            next_token = Tokens.SEMICOL
+        case ',':
+            add_char()
+            next_token = Tokens.COMMA
+
+        # Task 3 Reserved Words
+        case 'for':
+            add_char()
+            next_token = Tokens.FOR_CODE
+        case 'if':
+            add_char()
+            next_token = Tokens.IF_CODE
+        case 'else':
+            add_char()
+            next_token = Tokens.ELSE_CODE
+        case 'while':
+            add_char()
+            next_token = Tokens.WHILE_CODE
+        case 'do':
+            add_char()
+            next_token = Tokens.DO_CODE
+        case 'switch':
+            add_char()
+            next_token = Tokens.SWITCH_CODE
+        case 'int':
+            add_char()
+            next_token = Tokens.INT_CODE
+        case 'float':
+            add_char()
+            next_token = Tokens.FLOAT_CODE
+        case 'print':
+            add_char()
+            next_token = Tokens.PRINT_CODE
+
         case '\n':
             pass
         case _:
