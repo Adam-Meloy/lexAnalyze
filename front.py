@@ -28,6 +28,7 @@ class CharClass:
 class Tokens:
     INT_LIT: int = 10
     IDENT: int = 11
+    DEF = 999
 
     # Task 1 Operators
     MULT_OP: int = 20
@@ -68,8 +69,8 @@ class Tokens:
 
 # Function definitions
 #######################################################
-# lookup - a function to lookup operators and parentheses and return the token
-def lookup(ch):
+# lookup_simple - a function to lookup operators and parentheses of length 1 and return the token
+def lookup_simple(ch):
     global next_token
 
     match ch:
@@ -92,30 +93,15 @@ def lookup(ch):
         case '<':
             add_char()
             next_token = Tokens.LESS_OP
-        case '<=':
-            add_char()
-            next_token = Tokens.LESSEQ_OP
         case '>':
             add_char()
             next_token = Tokens.GREAT_OP
-        case '>=':
-            add_char()
-            next_token = Tokens.GREATEQ_OP
-        case '==':
-            add_char()
-            next_token = Tokens.EQUAL_OP
-        case '!=':
-            add_char()
-            next_token = Tokens.NOTEQ_OP
         case '!':
             add_char()
             next_token = Tokens.NOT_OP
-        case '&&':
+        case '=':
             add_char()
-            next_token = Tokens.AND_OP
-        case '||':
-            add_char()
-            next_token = Tokens.OR_OP
+            next_token = Tokens.ASSIGN_OP
 
         # Task 2 Symbols
         case '(':
@@ -137,41 +123,69 @@ def lookup(ch):
             add_char()
             next_token = Tokens.COMMA
 
-        # Task 3 Reserved Words
-        case 'for':
-            add_char()
-            next_token = Tokens.FOR_CODE
-        case 'if':
-            add_char()
-            next_token = Tokens.IF_CODE
-        case 'else':
-            add_char()
-            next_token = Tokens.ELSE_CODE
-        case 'while':
-            add_char()
-            next_token = Tokens.WHILE_CODE
-        case 'do':
-            add_char()
-            next_token = Tokens.DO_CODE
-        case 'switch':
-            add_char()
-            next_token = Tokens.SWITCH_CODE
-        case 'int':
-            add_char()
-            next_token = Tokens.INT_CODE
-        case 'float':
-            add_char()
-            next_token = Tokens.FLOAT_CODE
-        case 'print':
-            add_char()
-            next_token = Tokens.PRINT_CODE
-
         case '\n':
             pass
         case _:
-            add_char()
-            next_token = CharClass.EOF
+            lookup_complex(ch)
     return next_token
+
+
+# Function definitions
+#######################################################
+# lookup_complex - a function to lookup operators and parentheses of length 2+ and return the token
+def lookup_complex(ch):
+    global next_token
+
+    match ch:
+        # Task 1 Operations cont.
+        case '<=':
+            add_char()
+            next_token = Tokens.LESSEQ_OP
+        case '>=':
+            add_char()
+            next_token = Tokens.GREATEQ_OP
+        case '==':
+            add_char()
+            next_token = Tokens.EQUAL_OP
+        case '!=':
+            add_char()
+            next_token = Tokens.NOTEQ_OP
+        case '&&':
+            add_char()
+            next_token = Tokens.AND_OP
+        case '||':
+            add_char()
+            next_token = Tokens.OR_OP
+    return next_token
+
+
+# Function definitions
+#######################################################
+# lookup_reserved - a function to lookup reserved words and return the token
+def lookup_reserved(ch):
+    global next_token
+    match ch.lower():
+        # Task 3 Reserved Words
+        case "for":
+            next_token = Tokens.FOR_CODE
+        case "if":
+            next_token = Tokens.IF_CODE
+        case "else":
+            next_token = Tokens.ELSE_CODE
+        case "while":
+            next_token = Tokens.WHILE_CODE
+        case "do":
+            next_token = Tokens.DO_CODE
+        case "switch":
+            next_token = Tokens.SWITCH_CODE
+        case "int":
+            next_token = Tokens.INT_CODE
+        case "float":
+            next_token = Tokens.FLOAT_CODE
+        case "print":
+            next_token = Tokens.PRINT_CODE
+        case _:
+            next_token = Tokens.IDENT
 
 
 #######################################################
@@ -232,43 +246,41 @@ def lex():  # int
     global lex_len
     global next_token
 
-    lex_len = 0
+    while next_token != CharClass.EOF:
+        lex_len = 0
 
-    get_non_blank()
+        get_non_blank()
 
-    match char_class:
-        # Parse identifiers
-        case CharClass.LETTER:
-            add_char()
-            get_char()
-            while char_class == CharClass.LETTER or char_class == CharClass.DIGIT:
+        match char_class:
+            # Parse strings and reserved words
+            case CharClass.LETTER:
+                while char_class == CharClass.LETTER or char_class == CharClass.DIGIT:
+                    add_char()
+                    get_char()
+                lookup_reserved(lexeme)
+
+            # Parse integer literals
+            case CharClass.DIGIT:
+                while char_class == CharClass.DIGIT:
+                    add_char()
+                    get_char()
+                next_token = Tokens.INT_LIT
+
+            # Parse parentheses and operators
+            case CharClass.UNKNOWN:
                 add_char()
                 get_char()
-            next_token = Tokens.IDENT
+                next_token = Tokens.DEF
+                #TODO: Implement ability to check for complex operators and simple operators without conflict
 
-        # Parse integer literals
-        case CharClass.DIGIT:
-            add_char()
-            get_char()
-            while char_class == CharClass.DIGIT:
-                add_char()
-                get_char()
-            next_token = Tokens.INT_LIT
+            # EOF
+            case CharClass.EOF:
+                next_token = CharClass.EOF
+                lexeme = "EOF"
+        # End of match
 
-        # Parentheses and operators
-        case CharClass.UNKNOWN:
-            lookup(next_char)
-            get_char()
-
-        # EOF
-        case CharClass.EOF:
-            next_token = CharClass.EOF
-            lexeme = "EOF"
-    # End of match
-
-    print("Next token is: {next_token}, Next lexeme is {lexeme}".format(next_token = next_token, lexeme = lexeme))
-    lexeme = ""
-    return next_token
+        print("Next token is: {next_token}, Next lexeme is {lexeme}".format(next_token=next_token, lexeme=lexeme))
+        lexeme = ""
 
 
 #######################################################
@@ -280,6 +292,4 @@ if __name__ == '__main__':
     else:
         get_char()
         lex()
-        while next_token != CharClass.EOF:
-            lex()
     exit(0)  # exit code for success
