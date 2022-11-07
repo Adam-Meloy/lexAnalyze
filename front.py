@@ -28,7 +28,7 @@ class CharClass:
 class Tokens:
     INT_LIT: int = 10
     IDENT: int = 11
-    DEF = 999
+    DEF = -2  # DEF, or default, is the value used when no token is a match for the given input.
 
     # Task 1 Operators
     MULT_OP: int = 20
@@ -76,57 +76,43 @@ def lookup_simple(ch):
     match ch:
         # Task 1 Operations
         case '+':
-            add_char()
             next_token = Tokens.ADD_OP
         case '-':
-            add_char()
             next_token = Tokens.SUB_OP
         case '*':
-            add_char()
             next_token = Tokens.MULT_OP
         case '/':
-            add_char()
             next_token = Tokens.DIV_OP
         case '%':
-            add_char()
             next_token = Tokens.MOD_OP
         case '<':
-            add_char()
             next_token = Tokens.LESS_OP
         case '>':
-            add_char()
             next_token = Tokens.GREAT_OP
         case '!':
-            add_char()
             next_token = Tokens.NOT_OP
         case '=':
-            add_char()
             next_token = Tokens.ASSIGN_OP
 
         # Task 2 Symbols
         case '(':
-            add_char()
             next_token = Tokens.LEFT_PAREN
         case ')':
-            add_char()
             next_token = Tokens.RIGHT_PAREN
         case '{':
-            add_char()
             next_token = Tokens.LEFT_BRACE
         case '}':
-            add_char()
             next_token = Tokens.RIGHT_BRACE
         case ';':
-            add_char()
             next_token = Tokens.SEMICOL
         case ',':
-            add_char()
             next_token = Tokens.COMMA
 
+        # Special cases
         case '\n':
             pass
         case _:
-            lookup_complex(ch)
+            next_token = Tokens.DEF
     return next_token
 
 
@@ -139,23 +125,23 @@ def lookup_complex(ch):
     match ch:
         # Task 1 Operations cont.
         case '<=':
-            add_char()
             next_token = Tokens.LESSEQ_OP
         case '>=':
-            add_char()
             next_token = Tokens.GREATEQ_OP
         case '==':
-            add_char()
             next_token = Tokens.EQUAL_OP
         case '!=':
-            add_char()
             next_token = Tokens.NOTEQ_OP
         case '&&':
-            add_char()
             next_token = Tokens.AND_OP
         case '||':
-            add_char()
             next_token = Tokens.OR_OP
+
+        # Special cases
+        case '\n':
+            pass
+        case _:
+            next_token = Tokens.DEF
     return next_token
 
 
@@ -270,8 +256,12 @@ def lex():  # int
             case CharClass.UNKNOWN:
                 add_char()
                 get_char()
-                next_token = Tokens.DEF
-                #TODO: Implement ability to check for complex operators and simple operators without conflict
+                if lookup_complex(lexeme + next_char) != Tokens.DEF:
+                    add_char()
+                    get_char()
+                    lookup_complex(lexeme)
+                elif lookup_simple(lexeme) != Tokens.DEF:
+                    lookup_simple(lexeme)
 
             # EOF
             case CharClass.EOF:
