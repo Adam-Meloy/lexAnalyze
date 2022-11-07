@@ -28,13 +28,27 @@ class CharClass:
 class Tokens:
     INT_LIT: int = 10
     IDENT: int = 11
-    ASSIGN_OP: int = 20
-    ADD_OP: int = 21
-    SUB_OP: int = 22
-    MULT_OP: int = 23
-    DIV_OP: int = 24
-    LEFT_PAREN: int = 25
-    RIGHT_PAREN: int = 26
+    MULT_OP: int = 20
+    DIV_OP: int = 21
+    MOD_OP: int = 22
+    ADD_OP: int = 23
+    SUB_OP: int = 24
+    LESS_OP: int = 25
+    LESSEQ_OP: int = 26
+    GREAT_OP: int = 27
+    GREATEQ_OP: int = 28
+    EQUAL_OP: int = 29
+    NOTEQ_OP: int = 30
+    NOT_OP: int = 31
+    ASSIGN_OP: int = 32
+    AND_OP: int = 33
+    OR_OP: int = 34
+    LEFT_PAREN: int = 40
+    RIGHT_PAREN: int = 41
+    LEFT_BRACE: int = 42
+    RIGHT_BRACE: int = 43
+    SEMICOL: int = 44
+    COMMA: int = 45
 
 
 # Function definitions
@@ -50,6 +64,18 @@ def lookup(ch):
         case ')':
             add_char()
             next_token = Tokens.RIGHT_PAREN
+        case '{':
+            add_char()
+            next_token = Tokens.LEFT_BRACE
+        case '}':
+            add_char()
+            next_token = Tokens.RIGHT_BRACE
+        case ';':
+            add_char()
+            next_token = Tokens.SEMICOL
+        case ',':
+            add_char()
+            next_token = Tokens.COMMA
         case '+':
             add_char()
             next_token = Tokens.ADD_OP
@@ -62,6 +88,36 @@ def lookup(ch):
         case '/':
             add_char()
             next_token = Tokens.DIV_OP
+        case '%':
+            add_char()
+            next_token = Tokens.MOD_OP
+        case '<':
+            add_char()
+            next_token = Tokens.LESS_OP
+        case '<=':
+            add_char()
+            next_token = Tokens.LESSEQ_OP
+        case '>':
+            add_char()
+            next_token = Tokens.GREAT_OP
+        case '>=':
+            add_char()
+            next_token = Tokens.GREATEQ_OP
+        case '==':
+            add_char()
+            next_token = Tokens.EQUAL_OP
+        case '!=':
+            add_char()
+            next_token = Tokens.NOTEQ_OP
+        case '!':
+            add_char()
+            next_token = Tokens.NOT_OP
+        case '&&':
+            add_char()
+            next_token = Tokens.AND_OP
+        case '||':
+            add_char()
+            next_token = Tokens.OR_OP
         case '\n':
             pass
         case _:
