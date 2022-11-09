@@ -1,12 +1,7 @@
-# This the (modified) example lexical analyzer code in pages 173 - 177 of the
-# textbook,
-#
-# Sebesta, R. W. (2012). Concepts of Programming Languages.
-# Pearson, 10th edition.
+# This a re-written version of the lexical analyzer provided, in python.
+# front.py: a lexical analyzer system for simple arithmetic expressions
+# Team Members: Adam Meloy, Megan Lesmeister
 
-# front.py a lexical analyzer system for simple arithmetic expressions
-
-# Global declarations
 # Variables
 char_class: int = None
 lexeme: str = ""  # char -> string
@@ -282,4 +277,4 @@ if __name__ == '__main__':
     else:
         get_char()
         lex()
-    exit(0)  # exit code for success
+    exit(0)  # successful exit
