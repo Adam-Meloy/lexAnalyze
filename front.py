@@ -23,7 +23,7 @@ class CharClass:
 class Tokens:
     INT_LIT: int = 10
     IDENT: int = 11
-    DEF = -2  # DEF, or default, is the value used when no token is a match for the given input.
+    DEF = -2  # DEF, or default, is the value used when no token matches the given input
 
     # Task 1 Operators
     MULT_OP: int = 20
@@ -62,9 +62,8 @@ class Tokens:
     PRINT_CODE: int = 58
 
 
-# Function definitions
 #######################################################
-# lookup_simple - a function to lookup operators and parentheses of length 1 and return the token
+# lookup_simple - a function to lookup operators and symbols (of length 1) and return the token
 def lookup_simple(ch):
     global next_token
 
@@ -111,9 +110,8 @@ def lookup_simple(ch):
     return next_token
 
 
-# Function definitions
 #######################################################
-# lookup_complex - a function to lookup operators and parentheses of length 2+ and return the token
+# lookup_complex - a function to lookup operators and symbols (of length 2 or more) and return the token
 def lookup_complex(ch):
     global next_token
 
@@ -140,7 +138,6 @@ def lookup_complex(ch):
     return next_token
 
 
-# Function definitions
 #######################################################
 # lookup_reserved - a function to lookup reserved words and return the token
 def lookup_reserved(ch):
@@ -170,7 +167,7 @@ def lookup_reserved(ch):
 
 
 #######################################################
-# addChar - a function to add nextChar to lexeme
+# add_char - a function to add next_char to lexeme
 def add_char():  # void
     global lexeme
     global next_char
@@ -184,7 +181,7 @@ def add_char():  # void
 
 
 #######################################################
-# getChar - a function to get the next character of input and determine its character class
+# get_char - a function to get the next character of input and determine its character class
 def get_char():  # void
     global char_class
     global next_char
@@ -208,7 +205,7 @@ def get_char():  # void
 
 
 #######################################################
-# getNonBlank - a function to call getChar until it returns a non-whitespace character
+# get_non_blank - a function to call get_char until it returns a non-whitespace character
 def get_non_blank():  # void
     global next_char
 
@@ -247,7 +244,7 @@ def lex():  # int
                     get_char()
                 next_token = Tokens.INT_LIT
 
-            # Parse parentheses and operators
+            # Parse parentheses and symbols
             case CharClass.UNKNOWN:
                 add_char()
                 get_char()
@@ -273,7 +270,8 @@ def lex():  # int
 if __name__ == '__main__':
     # Open the input data file and process its contents
     if in_fp == "":
-        print("ERROR - cannot open front.in \n")
+        print("ERROR - front.in cannot be empty. \n")
+        exit(1)  # exit with error
     else:
         get_char()
         lex()
